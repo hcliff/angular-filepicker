@@ -1,9 +1,22 @@
-angular-filepicker
+angular-ink
 ==================
 
 Directive for filepicker.io
 requires scripts from filepicker.io
 
-use 
+Basic use:
 
-&lt;div filepicker path=&quot;/s3ServerPath/&quot; pickerclass=&quot;btn btn-default&quot; container=&quot;Mys3Bucket&quot; multiple=&quot;true&quot; mimetype=&quot;*&quot; callback=&quot;callBackToExecuteAfterUpload(file)&quot; multiple=false&gt;Add Photo&lt;/div&gt;
+	<input type="filepicker" ng-model="images" />
+
+Advanced use:
+
+	<filemanager ng-model="$parent.$parent.response.images"
+                 ink-options="inkOptions"
+                 class="form-control">
+      <picks width="34"
+             height="34"
+             fit="crop"></picks>
+      <button type="button" 
+              class="btn btn-default"
+              picker>Pick images</button>
+    </filemanager>
