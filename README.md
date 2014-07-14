@@ -6,11 +6,11 @@ requires scripts from filepicker.io
 
 Basic use:
 
-	<input type="filepicker" ng-model="images" />
+    <input type="filepicker" ng-model="images" />
 
 Advanced use:
 
-	<filemanager ng-model="$parent.$parent.response.images"
+    <filemanager ng-model="$parent.$parent.response.images"
                  ink-options="inkOptions"
                  class="form-control">
       <picks width="34"
