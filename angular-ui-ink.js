@@ -20,24 +20,26 @@ angular.module("ui.ink", [])
 .directive("filemanager", function(){
   return {
     restrict: "E",
-    require: ['?ngModel'],
-    link: function($scope, element, attrs, ctrls){
-      $scope.inkOptions = $scope.$eval(attrs.inkOptions);
-      $scope.ngModel = $scope.$eval(attrs.ngModel);
-
+    scope: {
+       ngModel: '=',
+       inkOptions: '=',
+    },
+    link: function($scope, element, attrs){
       if($scope.inkOptions.apiKey)
         filepicker.setKey($scope.inkOptions.apiKey);
+      $scope.picks = $scope.ngModel;
+      $scope.$watch('picks', function(value){
+        $scope.ngModel = value;
+      });
     },
     controller: function($scope){
       this.scope = $scope;
-
       this.addPicks = function(picks){
-        $scope.ngModel = _.union($scope.ngModel, picks);
-      };
-      this.removePick = function(image){
-        $scope.ngModel = _.without($scope.ngModel, image);
-      };
-
+        $scope.picks = $scope.picks.concat(picks);
+      }
+      this.removePick = function(pick){
+        $scope.picks = _.without($scope.picks, pick);
+      }
     }
   }
 })
@@ -56,16 +58,17 @@ angular.module("ui.ink", [])
     }
   }
 })
-.directive("picks", function(){
+.directive("pick", function(){
   return {
-    restrict: "E",
     require: '^filemanager',
-    template: "<img ng-src='{{pick|thumbnail:width:height:fit}}' ng-click='removePick(pick)' ng-repeat='pick in ngModel'/>",
-    link: function(scope, element, attrs, ctrl){
-      scope.removePick = ctrl.removePick;
-      scope.width = scope.$eval(attrs.width);
-      scope.height = scope.$eval(attrs.height);
-      scope.fit = attrs.fit;
+    link: function(scope, element, attrs, fileManager){
+      var pick = scope.$eval(attrs['pick']);
+      element.on('click', function(){
+        scope.$apply(function(){
+          fileManager.removePick(pick);
+        });
+        return false
+      });
     }
   }
 })
