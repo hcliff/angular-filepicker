@@ -2,12 +2,12 @@ angular.module("ui.ink", [])
 .directive("input", function(){
   return {
     restrict: "E",
-    require: ['?ngModel'],
-    link: function(scope, element, attrs, ctrls) {
-      if(attrs.type == "filepicker" && ctrls[0]){
+    require: '?ngModel',
+    link: function(scope, element, attrs, ctrl) {
+      if(attrs.type == "filepicker" && ctrl){
         filepicker.constructWidget(element[0]);
         // Our ng-model is an array of images
-        ctrls[0].$parsers.push(function(value){
+        ctrl.$parsers.push(function(value){
           if(angular.isString(value)){
             return value.split(",");
           }
@@ -17,20 +17,40 @@ angular.module("ui.ink", [])
     }
   };
 })
-.directive("filemanager", function(){
+.directive("filemanager", function($q, $http){
   return {
     restrict: "E",
     scope: {
        ngModel: '=',
        inkOptions: '=',
     },
-    link: function($scope, element, attrs){
+    require: "ngModel"
+    link: function($scope, element, attrs, ctrl){
       if($scope.inkOptions.apiKey)
         filepicker.setKey($scope.inkOptions.apiKey);
       $scope.picks = $scope.ngModel;
       $scope.$watch('picks', function(value){
         $scope.ngModel = value;
       });
+      function imageMime(mime){
+        return mime.indexOf("image/") === 0;
+      }
+      // ctrl.$formatters.push(function(value){
+      //   // Check the mime type of every image returned
+      //   // some google results can give us html
+      //   $q.all(_.map(value, function(v){
+      //     var d = $q.defer();
+      //     filepicker.stat(v, d.resolve, d.reject);
+      //     return d.promise;
+      //   })).then(function(results){
+      //     var validity = _.every(_.pluck(results, 'mimetype'), imageMime);
+      //     console.log(validity);
+      //     console.log(results);
+      //     ctrl.$setValidity("image", validity);
+      //     return validity ? value : undefined;
+      //   });
+      //   return value;
+      // });
     },
     controller: function($scope){
       this.scope = $scope;
