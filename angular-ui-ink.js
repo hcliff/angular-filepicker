@@ -1,15 +1,17 @@
-angular.module("ui.ink", [])
-.directive("input", function(){
+'use strict';
+
+angular.module('ui.ink', [])
+.directive('input', function(){
   return {
-    restrict: "E",
+    restrict: 'E',
     require: '?ngModel',
     link: function(scope, element, attrs, ctrl) {
-      if(attrs.type == "filepicker" && ctrl){
+      if(attrs.type === 'filepicker' && ctrl){
         filepicker.constructWidget(element[0]);
         // Our ng-model is an array of images
         ctrl.$parsers.push(function(value){
           if(angular.isString(value)){
-            return value.split(",");
+            return value.split(',');
           }
           return value;
         });
@@ -17,24 +19,25 @@ angular.module("ui.ink", [])
     }
   };
 })
-.directive("filemanager", function($q, $http){
+.directive('filemanager', function(){
   return {
-    restrict: "E",
+    restrict: 'E',
     scope: {
        ngModel: '=',
        inkOptions: '=',
     },
-    require: "ngModel"
-    link: function($scope, element, attrs, ctrl){
-      if($scope.inkOptions.apiKey)
+    require: 'ngModel',
+    link: function($scope){
+      if($scope.inkOptions.apiKey){
         filepicker.setKey($scope.inkOptions.apiKey);
+      }
       $scope.picks = $scope.ngModel;
       $scope.$watch('picks', function(value){
         $scope.ngModel = value;
       });
-      function imageMime(mime){
-        return mime.indexOf("image/") === 0;
-      }
+      // function imageMime(mime){
+      //   return mime.indexOf('image/') === 0;
+      // }
       // ctrl.$formatters.push(function(value){
       //   // Check the mime type of every image returned
       //   // some google results can give us html
@@ -46,7 +49,7 @@ angular.module("ui.ink", [])
       //     var validity = _.every(_.pluck(results, 'mimetype'), imageMime);
       //     console.log(validity);
       //     console.log(results);
-      //     ctrl.$setValidity("image", validity);
+      //     ctrl.$setValidity('image', validity);
       //     return validity ? value : undefined;
       //   });
       //   return value;
@@ -56,14 +59,14 @@ angular.module("ui.ink", [])
       this.scope = $scope;
       this.addPicks = function(picks){
         $scope.picks = $scope.picks.concat(picks);
-      }
+      };
       this.removePick = function(pick){
         $scope.picks = _.without($scope.picks, pick);
-      }
+      };
     }
-  }
+  };
 })
-.directive("picker", function($timeout){
+.directive('picker', function(){
   return {
     require: '^filemanager',
     link: function(scope, element, attrs, fileManager){
@@ -73,24 +76,24 @@ angular.module("ui.ink", [])
             fileManager.addPicks(_.pluck(picks, 'url'));
            });
         });
-        return false
+        return false;
       });
     }
-  }
+  };
 })
-.directive("pick", function(){
+.directive('pick', function(){
   return {
     require: '^filemanager',
     link: function(scope, element, attrs, fileManager){
-      var pick = scope.$eval(attrs['pick']);
+      var pick = scope.$eval(attrs.pick);
       element.on('click', function(){
         scope.$apply(function(){
           fileManager.removePick(pick);
         });
-        return false
+        return false;
       });
     }
-  }
+  };
 })
 .filter('thumbnail', function() {
   return function(input, width, height, fit) {
@@ -100,5 +103,5 @@ angular.module("ui.ink", [])
       'fit': fit
     };
     return input+'/convert?'+_.toQueryString(options);
-  }
+  };
 });
