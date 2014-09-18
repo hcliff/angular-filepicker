@@ -27,7 +27,7 @@ angular.module('ui.ink', [])
        inkOptions: '=',
     },
     require: 'ngModel',
-    link: function($scope){
+    link: function($scope, element, attrs, ctrl){
       if($scope.inkOptions.apiKey){
         filepicker.setKey($scope.inkOptions.apiKey);
       }
@@ -35,6 +35,10 @@ angular.module('ui.ink', [])
       $scope.$watch('picks', function(value){
         $scope.ngModel = value;
       });
+      // our ctrl is an array of entities
+      ctrl.$isEmpty = function(value){
+        return _.isUndefined(value) || value === '' || value === null || value !== value || value.length === 0;
+      };
       // function imageMime(mime){
       //   return mime.indexOf('image/') === 0;
       // }
