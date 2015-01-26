@@ -101,6 +101,9 @@ angular.module('ui.ink', [])
   })
   .filter('thumbnail', function() {
     return function(input, width, height, fit) {
+      if (!input) {
+        return;
+      }
       var options = {
         'w': width,
         'h': height,
