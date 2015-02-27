@@ -64,8 +64,8 @@ angular.module('ui.ink', [])
         this.addPicks = function(picks) {
           $scope.picks = $scope.picks.concat(picks);
         };
-        this.removePick = function(pick) {
-          $scope.picks = _.without($scope.picks, pick);
+        this.removePick = function(index) {
+          $scope.picks.splice(index, 1);
         };
       }
     };
@@ -85,14 +85,14 @@ angular.module('ui.ink', [])
       }
     };
   })
-  .directive('pick', function() {
+  .directive('removePick', function() {
     return {
       require: '^filemanager',
       link: function(scope, element, attrs, fileManager) {
-        var pick = scope.$eval(attrs.pick);
+        var pickIndex = scope.$eval(attrs.removePick);
         element.on('click', function() {
           scope.$apply(function() {
-            fileManager.removePick(pick);
+            fileManager.removePick(pickIndex);
           });
           return false;
         });
