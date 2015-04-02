@@ -23,7 +23,7 @@ angular.module('ui.ink', [])
     return {
       restrict: 'E',
       scope: {
-        ngModel: '=',
+        picks: '=ngModel',
         inkOptions: '=',
       },
       require: 'ngModel',
@@ -31,9 +31,8 @@ angular.module('ui.ink', [])
         if ($scope.inkOptions.apiKey) {
           filepicker.setKey($scope.inkOptions.apiKey);
         }
-        $scope.picks = $scope.ngModel;
         $scope.$watch('picks', function(value) {
-          $scope.ngModel = value;
+          $scope.picks = value;
         });
         // our ctrl is an array of entities
         ctrl.$isEmpty = function(value) {
@@ -60,7 +59,7 @@ angular.module('ui.ink', [])
         // });
       },
       controller: function($scope) {
-        this.scope = $scope;
+        $scope.picks = $scope.picks || [];
         this.addPicks = function(picks) {
           $scope.picks = $scope.picks.concat(picks);
         };
