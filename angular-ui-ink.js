@@ -1,13 +1,16 @@
 'use strict';
 
 angular.module('ui.ink', [])
-  .directive('input', function() {
+  .service('angularFilepicker', function($window) {
+    return $window.filepicker;
+  })
+  .directive('input', function(angularFilepicker) {
     return {
       restrict: 'E',
       require: '?ngModel',
       link: function(scope, element, attrs, ctrl) {
         if (attrs.type === 'filepicker' && ctrl) {
-          filepicker.constructWidget(element[0]);
+          angularFilepicker.constructWidget(element[0]);
           // Our ng-model is an array of images
           ctrl.$parsers.push(function(value) {
             if (angular.isString(value)) {
@@ -19,7 +22,7 @@ angular.module('ui.ink', [])
       }
     };
   })
-  .directive('filemanager', function() {
+  .directive('filemanager', function(angularFilepicker) {
     return {
       restrict: 'E',
       scope: {
@@ -29,7 +32,7 @@ angular.module('ui.ink', [])
       require: 'ngModel',
       link: function($scope, element, attrs, ctrl) {
         if ($scope.inkOptions.apiKey) {
-          filepicker.setKey($scope.inkOptions.apiKey);
+          angularFilepicker.setKey($scope.inkOptions.apiKey);
         }
         $scope.$watch('picks', function(value) {
           $scope.picks = value;
@@ -69,12 +72,12 @@ angular.module('ui.ink', [])
       }
     };
   })
-  .directive('picker', function() {
+  .directive('picker', function(angularFilepicker) {
     return {
       require: '^filemanager',
       link: function(scope, element, attrs, fileManager) {
         element.on('click', function() {
-          filepicker.pickMultiple(scope.inkOptions, function(picks) {
+          angularFilepicker.pickMultiple(scope.inkOptions, function(picks) {
             scope.$apply(function() {
               fileManager.addPicks(_.pluck(picks, 'url'));
             });
