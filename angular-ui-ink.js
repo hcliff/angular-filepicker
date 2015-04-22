@@ -69,6 +69,7 @@ angular.module('ui.ink', [])
         this.removePick = function(index) {
           $scope.picks.splice(index, 1);
         };
+        this.inkOptions = $scope.inkOptions;
       }
     };
   })
@@ -77,7 +78,7 @@ angular.module('ui.ink', [])
       require: '^filemanager',
       link: function(scope, element, attrs, fileManager) {
         element.on('click', function() {
-          angularFilepicker.pickMultiple(scope.inkOptions, function(picks) {
+          angularFilepicker.pickMultiple(fileManager.inkOptions, function(picks) {
             scope.$apply(function() {
               fileManager.addPicks(_.pluck(picks, 'url'));
             });
