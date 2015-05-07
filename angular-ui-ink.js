@@ -110,7 +110,8 @@ angular.module('ui.ink', [])
       var options = {
         'w': width,
         'h': height,
-        'fit': fit
+        'fit': fit,
+        'rotate': 'exif'
       };
       return input + '/convert?' + _.toQueryString(options);
     };
