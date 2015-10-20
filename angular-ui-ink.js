@@ -21,7 +21,7 @@ angular.module('ui.ink', [])
       restrict: 'E',
       require: '?ngModel',
       link: function(scope, element, attrs, ctrl) {
-        if (attrs.type === 'filepicker' && ctrl) {
+        if ((attrs.type === 'filepicker' || attrs.type === 'filepicker-dragdrop') && ctrl) {
           angularFilepicker.constructWidget(element[0]);
           // Our ng-model is an array of images
           ctrl.$parsers.push(function(value) {
